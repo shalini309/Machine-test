@@ -3,6 +3,8 @@ const productModel = require("../models/product")
 const orderModel = require("../models/order")
 const wareHouseModel = require("../models/warehouse")
 const { validation } = require("../validators/user");
+const jwt = require('jsonwebtoken')
+
 
 module.exports = {
 
@@ -68,7 +70,8 @@ module.exports = {
                 if (!isMatch) {
                     return res.status(200).send({ code: 422, success: true, error: false, message: "You have entered incorrect password." });
                 } else {
-                    return res.status(200).send({ code: 200, success: true, error: false, message: "Logged in successfully" });
+                    let token = jwt.sign({ _id: isExistUser._id, email: isExistUser.email, isApprovedByAdmin: isExistUser.isApprovedByAdmin }, "frw38d4ef7qh174ms", { expiresIn: '7d' })
+                    return res.status(200).send({ code: 200, success: true, error: false, message: "Logged in successfully", token });
                 }
             })
         } catch (error) {
